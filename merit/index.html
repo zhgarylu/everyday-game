@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>回声 · 天师摇人</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #07070f; overflow: hidden; touch-action: none;
+    font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; color: #f6f1e4; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+  canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+  .kai { font-family: "Kaiti SC", "STKaiti", "KaiTi", "楷体", serif; }
+  #hud { position: absolute; inset: 0; display: none; pointer-events: none; }
+  #top { position: absolute; left: 0; top: 0; height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;
+    background: linear-gradient(180deg, rgba(10, 6, 20, .92), rgba(10, 6, 20, .55)); border-bottom: 1px solid rgba(255, 210, 74, .35); font-size: 13px; white-space: nowrap; }
+  #top b { font-size: 17px; font-variant-numeric: tabular-nums; }
+  #waveN { color: #ffd24a; } #gold b { color: #ffd24a; } #free { color: #7df0ff; display: none; }
+  #hpWrap { flex: 1; min-width: 60px; max-width: 260px; height: 16px; border-radius: 8px; background: rgba(0, 0, 0, .6); border: 1px solid rgba(255, 210, 74, .5); position: relative; overflow: hidden; }
+  #hpBar { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: linear-gradient(90deg, #19c9d6, #6dfcff); transition: width .2s; }
+  #hpBar.low { background: linear-gradient(90deg, #c4142a, #ff6a4a); }
+  #hpTxt { position: absolute; inset: 0; text-align: center; font-size: 11px; line-height: 16px; font-weight: 700; text-shadow: 0 1px 2px #000; }
+  #top button { pointer-events: auto; height: 30px; min-width: 38px; border-radius: 8px; border: 1px solid rgba(255, 210, 74, .5); background: rgba(40, 14, 30, .9); color: #ffe9a0; font: inherit; font-weight: 800; font-size: 13px; }
+  #banner { position: absolute; top: 58px; padding: 7px 22px; border-radius: 6px; font-size: 18px; font-weight: 900; letter-spacing: 3px; white-space: nowrap; transform: translateX(-50%); opacity: 0; transition: opacity .25s;
+    color: #fff3c0; background: linear-gradient(90deg, rgba(120, 8, 24, 0), rgba(150, 12, 30, .95) 18%, rgba(150, 12, 30, .95) 82%, rgba(120, 8, 24, 0)); text-shadow: 0 0 10px #ff9a1f, 0 2px 3px #000; }
+  #status { position: absolute; font-size: 12px; line-height: 1.45; color: #ffe9a0; text-shadow: 0 1px 2px #000; overflow: hidden; }
+  #spin { position: absolute; pointer-events: auto; border-radius: 18px; border: 3px solid #ffd24a; color: #fff; font: inherit; cursor: pointer;
+    background: radial-gradient(circle at 50% 28%, #ff6a7a, #d3142e 55%, #7a0816); box-shadow: 0 0 22px rgba(255, 60, 80, .55), inset 0 3px 8px rgba(255, 255, 255, .35), inset 0 -8px 14px rgba(0, 0, 0, .35); transition: transform .08s, filter .15s; }
+  #spin b { display: block; font-size: 30px; letter-spacing: 4px; text-shadow: 0 2px 0 #5a0610, 0 0 12px rgba(255, 220, 120, .8); }
+  #spin span { display: inline-block; margin-top: 2px; padding: 1px 10px; border-radius: 999px; background: rgba(0, 0, 0, .4); color: #ffe07a; font-size: 13px; font-weight: 800; }
+  #spin:active:not(:disabled) { transform: scale(.95); } #spin:disabled { filter: grayscale(.7) brightness(.7); }
+  #wave { position: absolute; pointer-events: auto; border-radius: 12px; border: 2px solid #7df0ff; color: #eaffff; font: inherit; font-weight: 900; font-size: 15px; cursor: pointer;
+    background: linear-gradient(180deg, #1a8fb0, #0b3c66); box-shadow: 0 0 14px rgba(60, 220, 255, .45); }
+  #wave:disabled { filter: grayscale(.8) brightness(.65); box-shadow: none; }
+  #wave.go { animation: go 1s infinite; } @keyframes go { 50% { box-shadow: 0 0 26px rgba(120, 240, 255, .95); filter: brightness(1.25); } }
+  #tip { position: absolute; padding: 2px 12px; border-radius: 999px; background: rgba(8, 6, 18, .7); font-size: 12px; color: rgba(255, 240, 200, .9); text-shadow: 0 1px 2px #000; white-space: nowrap; transform: translateX(-50%); }
+  #relic, #screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; }
+  #relic { background: rgba(5, 3, 12, .78); backdrop-filter: blur(3px); }
+  #relic h2 { margin: 4px 0 14px; font-size: 26px; color: #ffd24a; letter-spacing: 4px; text-shadow: 0 0 14px rgba(255, 180, 40, .6); } #relic small { color: #7df0ff; letter-spacing: 3px; }
+  #choices { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 760px; }
+  .card { width: 220px; padding: 14px 14px 12px; border-radius: 6px; text-align: left; cursor: pointer; font: inherit; color: #3a1a08; border: 0; position: relative;
+    background: linear-gradient(180deg, #fff3b8, #f5c64a 70%, #dc9a20); box-shadow: 0 6px 18px rgba(0, 0, 0, .6), inset 0 0 0 2px rgba(160, 30, 20, .55), inset 0 0 0 5px rgba(255, 243, 184, .6); transition: transform .12s; }
+  .card:hover { transform: translateY(-5px) rotate(-1deg); }
+  .card i { font-style: normal; font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 999px; background: #a3121c; color: #ffe9a0; }
+  .card h3 { margin: 8px 0 4px; font-size: 22px; color: #a3121c; letter-spacing: 2px; } .card p { margin: 0; font-size: 13px; line-height: 1.6; min-height: 62px; }
+  #screen { display: flex; background: radial-gradient(circle at 50% 40%, rgba(40, 8, 30, .82), rgba(5, 3, 12, .95)); }
+  #screen .tag { font-size: 12px; letter-spacing: 8px; color: #7df0ff; }
+  #screen h1 { margin: 6px 0 0; font-size: clamp(46px, 12vw, 92px); line-height: 1.05; letter-spacing: 6px; background: linear-gradient(180deg, #fff6c8 20%, #ffd24a 55%, #ff5a3a); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 20px rgba(255, 120, 40, .55)) drop-shadow(0 4px 4px #000); }
+  #screen .sub { font-size: 15px; margin: 10px 0 12px; color: rgba(255, 240, 210, .95); line-height: 1.8; }
+  #screen .help { font-size: 13px; line-height: 2; color: rgba(240, 230, 210, .92); text-align: left; display: inline-block; } #screen .help b { color: #ffd24a; }
+  #screen table { margin: 12px auto 0; border-collapse: collapse; font-size: 15px; } #screen td { padding: 3px 16px; text-align: left; } #screen td:last-child { text-align: right; font-weight: 800; font-variant-numeric: tabular-nums; color: #ffe9a0; }
+  #screen .big { font-size: 54px; font-weight: 900; color: #ffd24a; text-shadow: 0 0 22px rgba(255, 180, 40, .6), 0 3px 6px #000; } #screen .rank { font-size: 20px; letter-spacing: 6px; color: #7df0ff; }
+  #screen .go { margin-top: 18px; padding: 13px 52px; font-size: 22px; font-weight: 900; letter-spacing: 8px; cursor: pointer; border-radius: 12px; color: #fff; font-family: inherit; border: 2px solid #ffd24a;
+    background: linear-gradient(180deg, #ff4a5c, #a80d20); box-shadow: 0 0 26px rgba(255, 60, 80, .6), 0 6px 14px rgba(0, 0, 0, .6); }
+  #home { position: absolute; left: 12px; top: 12px; z-index: 30; display: flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 12px; background: rgba(8, 10, 20, .8); border: 1px solid rgba(255, 255, 255, .25); color: #fff; font-size: 14px; text-decoration: none; }
+  #screen[style*="display: none"] ~ #home { display: none; }
+  @media (max-width: 720px) { .card { width: 100%; max-width: 330px; padding: 10px 14px; } .card p { min-height: 0; } .card h3 { font-size: 19px; margin: 5px 0 2px; } #relic h2 { font-size: 22px; margin-bottom: 10px; } #spin b { font-size: 24px; } #banner { font-size: 15px; } #top { gap: 6px; font-size: 12px; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv"></canvas>
+  <div id="hud">
+    <div id="top"><span>第 <b id="waveN">1</b>/10 波</span><div id="hpWrap"><div id="hpBar"></div><div id="hpTxt"></div></div><span id="gold">香火 <b>0</b></span><span id="free">免费 <b>0</b></span><button id="speed">1×</button><button id="mute">声</button></div>
+    <div id="banner" class="kai"></div>
+    <div id="status"></div>
+    <button id="spin"><b class="kai">摇人</b><span id="cost">20 香火</span></button>
+    <button id="wave">开始第 1 波</button>
+    <div id="tip">把单位拖到同类身上炼化，叠 3 层渡劫觉醒</div>
+  </div>
+  <div id="relic"><small>本波清剿完成</small><h2 class="kai">请一件改命法宝</h2><div id="choices"></div></div>
+  <div id="screen"></div>
+  <a id="home" href="../">‹ 游戏厅</a>
+</div>
+<script type="module">import("./game.js?t=" + Date.now());</script>
+</body>
+</html>

@@ -85,5 +85,10 @@ export const GAMES = [
     intro: '雨后的广州夜晚，骑着电鸡甩尾送外卖。一条环线从猎德大桥进珠江新城，绕过中山纪念堂，过海珠桥钻进骑楼老街和城中村，再从广州塔脚下回来。漂移攒小费，松手喷出去，撞了汤会洒，倒计时走完就收工。',
     tags: ['竞速', '漂移', '大作感'], screen: '横竖屏', mins: 3, more: '键盘或触屏',
     record: () => { const n = +(localStorage.getItem('echo_gz_best') || 0); return n ? '最高收入 <b>¥' + n.toLocaleString() + '</b>' : ''; },
+  },  {
+    id: 'merit', no: 14, date: '2026-11-20', name: '天师摇人', url: 'merit/', cover: 'covers/merit.jpg', pos: '50% 40%',
+    intro: '拉一把八卦功德机，三个连成线就请出一件法器：桃木剑、糯米炮、雷公符、镇宅狮、招财猫。跳僵、纸人、飞头蛮、铁棺尸、白无常、鬼新娘从鬼门关一波波闯出来，最后是千年旱魃。同类法器拖到一起炼化，叠三层渡劫觉醒；三个天师印连线，钟馗下来清场。',
+    tags: ['塔防', '老虎机', '合成'], screen: '横竖屏', mins: 6, more: '鼠标或触屏',
+    record: () => { const n = +(localStorage.getItem('echo_merit_best') || 0); return n ? '最高功德 <b>' + n.toLocaleString() + '</b>' : ''; },
   },
 ];

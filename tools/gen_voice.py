@@ -77,6 +77,7 @@ RIDER_NPC_GROUPS = [
     ('+10%', '差点被电动车撞到的路人，又惊又气地喊', ['你怎么骑车的！']),
 ]
 RIDER_GROUPS = [('+8%', '', ['完了，有交警', '又罚款', '吓死我了', '看路啊大哥', '堵死了', '今天手气不错', '这单舒服', '还是有好人的', '妈，我吃了，你别操心', '催什么催，我也想快', '又扣我钱', '唉，不想跑了', '算了，再跑一单', '顶得住', '好累啊', '歇口气先', '又来单了', '这么远才给这点', '出餐快点嘛老板', '哎哟，摔了', '完了，汤洒了', '搞定，下一单', '又超时了', '下雨了，单多起来了', '累死了，收工', '谢谢老板', '这系统，越跑越紧', '您的外卖到了', '爬楼去咯', '红灯，等一下'])]
+MERIT_GROUPS = [('+8%', '', ['开坛摇人', '中了中了', '天师来啦', '渡劫成功', '香火不够啦', '又没中', '顶住顶住', '大家伙来啦', '镇妖大捷', '结界破啦'])]
 SETS = {'td': dict(groups=GROUPS, out=OUT, voice='zh_female_vv_uranus_bigtts', dialect='shaanxi', resource='seed-tts-2.0'),
         'eat': dict(groups=EAT_GROUPS, out=os.path.join(ROOT, 'eat', 'voice'), voice='zh_male_guangxiyuanzhou_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
         'scrub': dict(groups=SCRUB_GROUPS, out=os.path.join(ROOT, 'scrub', 'voice'), voice='zh_male_guangxiyuanzhou_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
@@ -87,6 +88,7 @@ SETS = {'td': dict(groups=GROUPS, out=OUT, voice='zh_female_vv_uranus_bigtts', d
         'match': dict(groups=MATCH_GROUPS, out=os.path.join(ROOT, 'match', 'voice'), voice='zh_male_guangxiyuanzhou_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
         'smash': dict(groups=SMASH_GROUPS, out=os.path.join(ROOT, 'smash', 'voice'), voice='zh_male_guangxiyuanzhou_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
         'chip': dict(groups=CHIP_GROUPS, out=os.path.join(ROOT, 'chip', 'voice'), voice='zh_male_guangxiyuanzhou_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
+        'merit': dict(groups=MERIT_GROUPS, out=os.path.join(ROOT, 'merit', 'voice'), voice='zh_male_guangxiyuanzhou_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
         'gz': dict(groups=GZ_GROUPS, out=os.path.join(ROOT, 'gz', 'voice'), voice='zh_female_wanqudashu_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
         'rider': dict(groups=RIDER_GROUPS, out=os.path.join(ROOT, 'rider', 'voice'), voice='zh_male_guangxiyuanzhou_moon_bigtts', dialect='none', resource='seed-tts-1.0'),
         'rider_npc': dict(groups=RIDER_NPC_GROUPS, out=os.path.join(ROOT, 'rider', 'voice_npc'), voice='zh_female_vv_uranus_bigtts', dialect='none', resource='seed-tts-2.0'),
