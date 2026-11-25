@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>十形拳 · 回声游戏厅</title>
+<style>
+  :root {
+    --void: #04050a;
+    --alabaster: #f4f2ec;
+    --gold: #ffd166;
+    --cyan: #38bdf8;
+    --crimson: #ef4444;
+    --violet: #a855f7;
+    --muted: #8b95a8;
+    --font-sans: "SF Pro Display", "PingFang SC", "Noto Sans SC", "Inter", "Helvetica Neue", sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--void);
+    color: var(--alabaster);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #stage {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background: var(--void);
+    cursor: pointer;
+    touch-action: none;
+    outline: none;
+  }
+
+  /* Bottom Sleek Interactive Form & Utility Dock */
+  #dock {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(7, 9, 16, 0.78);
+    border: 1px solid rgba(244, 242, 236, 0.16);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    max-width: calc(100vw - 16px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    transition: opacity 0.25s ease;
+  }
+  #dock::-webkit-scrollbar { display: none; }
+
+  .dock-group {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
+  .dock-sep {
+    width: 1px;
+    height: 14px;
+    background: rgba(244, 242, 236, 0.16);
+    margin: 0 2px;
+    flex-shrink: 0;
+  }
+
+  .dock-btn {
+    appearance: none;
+    border: 1px solid transparent;
+    background: rgba(244, 242, 236, 0.055);
+    color: rgba(244, 242, 236, 0.82);
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 5px 7px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease, transform 0.1s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .dock-btn:hover {
+    color: #ffffff;
+    background: rgba(244, 242, 236, 0.16);
+    border-color: rgba(244, 242, 236, 0.30);
+  }
+  .dock-btn:active {
+    transform: scale(0.95);
+  }
+
+  .dock-btn.active {
+    color: #04050a;
+    background: var(--alabaster);
+    border-color: #ffffff;
+    font-weight: 800;
+    box-shadow: 0 0 14px rgba(244, 242, 236, 0.42);
+  }
+
+  .dock-btn.ult-ready {
+    color: #ffd166;
+    background: rgba(255, 209, 102, 0.18);
+    border-color: rgba(255, 209, 102, 0.55);
+    box-shadow: 0 0 14px rgba(255, 209, 102, 0.35);
+  }
+
+  .dock-btn.cyan-on {
+    color: var(--cyan);
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+
+  .dock-btn.amber-on {
+    color: var(--gold);
+    background: rgba(255, 209, 102, 0.16);
+    border-color: rgba(255, 209, 102, 0.45);
+  }
+
+  .dock-btn.form-pill {
+    padding: 4px 6px;
+    font-size: 8.5px;
+  }
+
+  /* Touch Controls for Mobile / Tablet */
+  #touchControls {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 35;
+    display: none;
+  }
+  @media (pointer: coarse) {
+    #touchControls { display: block; }
+    #dock { bottom: 6px; }
+  }
+  .touch-pad {
+    position: absolute;
+    bottom: 62px;
+    display: flex;
+    gap: 10px;
+    pointer-events: auto;
+  }
+  .touch-left { left: 16px; }
+  .touch-right { right: 16px; }
+  .tbtn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(244, 242, 236, 0.25);
+    background: rgba(8, 10, 18, 0.62);
+    backdrop-filter: blur(8px);
+    color: #f4f2ec;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+  }
+  .tbtn:active {
+    background: rgba(255, 209, 102, 0.35);
+    border-color: #ffd166;
+  }
+
+  /* Subtle Controls Hint Bar above Dock on Desktop */
+  #hintBar {
+    position: fixed;
+    bottom: 54px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    font-size: 9.5px;
+    color: rgba(244, 242, 236, 0.56);
+    background: rgba(4, 5, 10, 0.45);
+    padding: 3px 12px;
+    border-radius: 999px;
+    pointer-events: none;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    transition: opacity 0.3s ease;
+  }
+  @media (max-width: 900px) {
+    #hintBar { display: none; }
+    #dock { padding: 4px 7px; gap: 3px; }
+    .dock-btn { font-size: 8px; padding: 4px 5px; }
+  }
+  #home { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 40; padding: 4px 12px; border-radius: 999px;
+    font: 600 12px "PingFang SC", sans-serif; color: rgba(244,242,236,.8); text-decoration: none; background: rgba(4,5,10,.55); border: 1px solid rgba(255,209,102,.3); }
+  #home:hover { color: #ffd166; }
+  body.playing #home { display: none; }   /* 打的时候不挡界面；暂停、结算时再出现 */
+</style>
+</head>
+<body>
+
+<canvas id="stage" tabindex="0"></canvas>
+<a id="home" href="../">‹ 游戏厅</a>
+
+<div id="hintBar">
+  A/D 移动 · W/K 跳（可二段）· J 三段连招 · L/Shift 闪身 · 空格 奥义 · 1–9、0、Q/E 切换拳路
+</div>
+
+<div id="touchControls">
+  <div class="touch-pad touch-left">
+    <button class="tbtn" data-key="left">◀</button>
+    <button class="tbtn" data-key="right">▶</button>
+  </div>
+  <div class="touch-pad touch-right">
+    <button class="tbtn" data-key="dash">闪</button>
+    <button class="tbtn" data-key="attack">攻</button>
+    <button class="tbtn" data-key="jump">跳</button>
+    <button class="tbtn" data-key="ult" style="border-color:#ffd166;color:#ffd166;">奥</button>
+  </div>
+</div>
+
+<nav id="dock" aria-label="十形拳 操作">
+  <div class="dock-group">
+    <button id="btnUlt" class="dock-btn ult-ready" title="释放领域展开奥义 (Space / U / X)">⚡ 奥义</button>
+    <button id="btnPlay" class="dock-btn" title="暂停 / 继续 (P)">❚❚</button>
+    <button id="btnRestart" class="dock-btn" title="重新开始 (R)">↺</button>
+  </div>
+
+  <div class="dock-sep"></div>
+
+  <div id="formStrip" class="dock-group"></div>
+
+  <div class="dock-sep"></div>
+
+  <div class="dock-group">
+    <button id="btnBloom" class="dock-btn cyan-on" title="开关光学泛光 (B)">✦ 泛光</button>
+    <button id="btnSound" class="dock-btn" title="开关音乐与音效 (M)">♪ 静音</button>
+  </div>
+</nav>
+
+<script src="game.js?v=1"></script>
+</body>
+</html>

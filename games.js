@@ -91,4 +91,10 @@ export const GAMES = [
     tags: ['塔防', '老虎机', '合成'], screen: '横竖屏', mins: 6, more: '鼠标或触屏',
     record: () => { const n = +(localStorage.getItem('echo_merit_best') || 0); return n ? '最高功德 <b>' + n.toLocaleString() + '</b>' : ''; },
   },
+  {
+    id: 'wushu', no: 15, date: '2026-11-25', name: '十形拳', url: 'wushu/', cover: 'covers/wushu.jpg', pos: '50% 55%',
+    intro: '横版闯关打一路：三段连招、二段跳、闪身，十种拳路随时切换——烈火铁拳、水墨剑圣、太极宗师、风火枪圣……攒满气劲放全屏奥义，金龙、万剑、金刚神掌一招清屏。打飞的妖怪还会撞翻身后一串。穿过青竹镇、落日关、金顶寺、霓虹夜市，最后在擂台上打倒赤鬼王。',
+    tags: ['动作', '格斗', '横版'], screen: '横屏', mins: 4, more: '键盘最顺手，触屏有按键',
+    record: () => { const n = +(localStorage.getItem('echo_wushu_best') || 0); return n ? '最高得分 <b>' + n.toLocaleString() + '</b>' : ''; },
+  },
 ];
