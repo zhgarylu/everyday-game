@@ -103,4 +103,10 @@ export const GAMES = [
     tags: ['射击', '升级', '解压'], screen: '竖屏', mins: 5, more: '自动开火，拖动瞄准',
     record: () => { const n = +(localStorage.getItem('echo_nian_best') || 0); return n ? '最高得分 <b>' + n.toLocaleString() + '</b>' : ''; },
   },
+  {
+    id: 'mozi', no: 17, date: '2026-11-28', name: '墨字守营', url: 'mozi/', cover: 'covers/mozi.jpg', pos: '50% 45%',
+    intro: '水墨棋盘上摆字守营：弓、刀、毒、刺、骑、炮各自开打，同字相叠升星。相邻两格拼出「黄忠」「关羽」「张飞」「赵云」「孔明」就召唤武将——箭雨、青龙偃月、当阳一喝、白马逆冲、火烧连营。砚台墨满，在战场上一笔挥毫斩一片。守住十二波，打退敌帅和墨魔。',
+    tags: ['塔防', '合成', '策略'], screen: '竖屏', mins: 6, more: '拖拽操作，单手可玩',
+    record: () => { const n = +(localStorage.getItem('echo_mozi_best') || 0); return n ? '最高战功 <b>' + n.toLocaleString() + '</b>' : ''; },
+  },
 ];
