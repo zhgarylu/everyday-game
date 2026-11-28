@@ -97,4 +97,10 @@ export const GAMES = [
     tags: ['动作', '格斗', '横版'], screen: '横屏', mins: 4, more: '键盘最顺手，触屏有按键',
     record: () => { const n = +(localStorage.getItem('echo_wushu_best') || 0); return n ? '最高得分 <b>' + n.toLocaleString() + '</b>' : ''; },
   },
+  {
+    id: 'nian', no: 16, date: '2026-11-28', name: '烟花炸年兽', url: 'nian/', cover: 'covers/nian.jpg', pos: '50% 40%',
+    intro: '除夕夜，年兽披着二十五层鳞甲压过来。楼顶摆开烟花炮阵：窜天猴自动连发，火树银花喷光柱，二踢脚拐弯追着炸，滋花电光连跳，千响挂鞭沿着鳞甲噼里啪啦炸一圈。一层层轰碎鳞甲，攒满放一发大礼花，子时年兽现身，把它本体炸跑。',
+    tags: ['射击', '升级', '解压'], screen: '竖屏', mins: 5, more: '自动开火，拖动瞄准',
+    record: () => { const n = +(localStorage.getItem('echo_nian_best') || 0); return n ? '最高得分 <b>' + n.toLocaleString() + '</b>' : ''; },
+  },
 ];
